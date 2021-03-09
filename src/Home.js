@@ -1,15 +1,14 @@
 
 import React from 'react'
+import Banner from './Banner'
 import './Home.css'
 import Navbar from './Navbar.js'
 function Home() {
     return (
-        <div className="homeScreen">
-            {/* NavBar */}
-            <Navbar />
-            {/* Banner */}
+        <div className="homeScreen">           
+            <Navbar /> 
+            <Banner />
             {/* Rows */}
-
         </div>
     )
 }
