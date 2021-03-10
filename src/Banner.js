@@ -1,6 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Banner.css";
+import axios from "./axios";
+import requests from "./requests";
+
 function Banner() {
+  const [movie, setMovie] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const request = await axios.get(requests.fetchNetflixOriginals);
+      setMovie(
+        request.data.results[
+          Math.floor(Math.random() * request.data.results.length - 1)
+        ]
+      );
+      return request;
+    }
+
+    fetchData();
+  }, []);
+
+  console.log(movie);
+
   function truncate(string, n) {
     return string?.length > n ? string.substr(0, n - 1) + "..." : string;
   }
@@ -10,25 +31,20 @@ function Banner() {
       className="banner"
       style={{
         backgroundSize: "cover",
-        backgroundPosition: "center center",
-        backgroundImage: `url("https://www.movievine.com/wp-content/uploads/2015/02/12098519-e1423418280985.jpg")`,
+        backgroundPosition: "center top",
+        backgroundImage: `url("https://image.tmdb.org/t/p/original/${movie?.backdrop_path}")`,
       }}
     >
       <div class="banner__contents">
-        <h1 class="banner__title">Movie Name</h1>
+        <h1 class="banner__title">
+          {movie?.title || movie?.name || movie?.original_name}
+        </h1>
         <div class="banner__buttons">
           <button className="banner__button">Play</button>
           <button className="banner__button">My List</button>
         </div>
         <h1 class="banner__description">
-          {truncate(
-            `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae augue sollicitudin arcu blandit convallis non vel eros. 
-            Integer bibendum arcu eu elit malesuada, eu rutrum augue eleifend. Suspendisse a facilisis lacus. Mauris ullamcorper elementum arcu sit amet tristique. 
-            Quisque in ex non lacus feugiat efficitur in eget tellus. Quisque sit amet lobortis sapien. Maecenas aliquet pretium tellus, quis pulvinar nulla. 
-            Aliquam feugiat diam vel diam viverra, sed fringilla odio vestibulum. Curabitur tempor interdum ipsum. Mauris ultrices tortor at sapien dapibus, id aliquam diam viverra. 
-            Etiam eu venenatis purus, nec egestas nibh. Vestibulum ut lorem nec lacus convallis faucibus.`,
-            150
-          )}
+          {truncate(`${movie.overview}`, 150)}
         </h1>
       </div>
       <div class="banner--fadeBottom" />
